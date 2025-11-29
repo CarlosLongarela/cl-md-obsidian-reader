@@ -6,6 +6,9 @@
  * @package CL_MD_Obsidian_Reader
  */
 
+// Check HTTP Authentication.
+require_once __DIR__ . '/auth.php';
+
 // Ensure UTF-8 encoding.
 mb_internal_encoding( 'UTF-8' );
 mb_http_output( 'UTF-8' );

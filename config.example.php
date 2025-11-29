@@ -13,6 +13,18 @@ define( 'CL_GITHUB_REPO', 'Username/Your-Obsidian-Repo' );
 // Required scopes: repo (for private repos) or public_repo (for public repos only).
 define( 'CL_GITHUB_TOKEN', '' );
 
+// HTTP Authentication.
+define( 'CL_ENABLE_HTTP_AUTH', false ); // Set to true to enable HTTP authentication.
+define(
+	'CL_HTTP_AUTH_USERS',
+	array(
+		'admin' => 'changeThisPassword',  // username => password.
+		// 'user2' => 'anotherPassword',
+		// Add more users as needed.
+	)
+);
+define( 'CL_HTTP_AUTH_REALM', 'Obsidian Notes - Restricted Area' );
+
 // Application Settings.
 define( 'CL_APP_TITLE', 'Obsidian Notes' );
 define( 'CL_DEFAULT_THEME', 'dark' ); // Options: 'dark', 'light'.

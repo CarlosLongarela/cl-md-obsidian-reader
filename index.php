@@ -8,6 +8,9 @@
  * @package ObsidianRepoViewer
  */
 
+// Check HTTP Authentication.
+require_once __DIR__ . '/auth.php';
+
 // Load configuration.
 if ( ! file_exists( __DIR__ . '/config.php' ) ) {
 	http_response_code( 500 );
