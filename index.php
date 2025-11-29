@@ -62,17 +62,27 @@ function cl_get_repo_contents( $path = '' ) {
 	$options = array(
 		'http' => array(
 			'header' => $headers,
-		)
+		),
 	);
 
 	$context  = stream_context_create( $options );
-	$response = @file_get_contents( $url, false, $context );
+	$response = file_get_contents( $url, false, $context );
 
 	if ( false === $response ) {
+		error_log( 'GitHub API Error: Failed to fetch ' . $url );
+		if ( isset( $http_response_header ) ) {
+			error_log( 'Response headers: ' . print_r( $http_response_header, true ) );
+		}
 		return false;
 	}
 
-	return json_decode( $response, true );
+	$decoded = json_decode( $response, true );
+
+	if ( isset( $decoded['message'] ) ) {
+		error_log( 'GitHub API Response: ' . $decoded['message'] );
+	}
+
+	return $decoded;
 }
 
 /**

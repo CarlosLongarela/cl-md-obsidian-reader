@@ -6,7 +6,11 @@
  * @package CL_MD_Obsidian_Reader
  */
 
-header( 'Content-Type: application/json' );
+// Ensure UTF-8 encoding.
+mb_internal_encoding( 'UTF-8' );
+mb_http_output( 'UTF-8' );
+
+header( 'Content-Type: application/json; charset=utf-8' );
 header( 'Access-Control-Allow-Origin: *' );
 
 // Load configuration.
@@ -78,17 +82,41 @@ function cl_github_request( $url ) {
 	);
 
 	$context  = stream_context_create( $options );
-	$response = @file_get_contents( $url, false, $context );
+	$response = file_get_contents( $url, false, $context );
 
 	if ( false === $response ) {
+		$error_message = 'Failed to fetch from GitHub API';
+
+		if ( isset( $http_response_header ) ) {
+			error_log( 'GitHub API Headers: ' . print_r( $http_response_header, true ) );
+
+			// Check for specific HTTP errors.
+			foreach ( $http_response_header as $header ) {
+				if ( strpos( $header, 'HTTP/' ) === 0 ) {
+					$error_message .= ' - ' . $header;
+				}
+			}
+		}
+
 		http_response_code( 500 );
 		return array(
 			'error'   => true,
-			'message' => 'Failed to fetch from GitHub API',
+			'message' => $error_message,
 		);
 	}
 
-	return json_decode( $response, true );
+	$decoded = json_decode( $response, true );
+
+	// Check if GitHub returned an error message.
+	if ( isset( $decoded['message'] ) && ! isset( $decoded['name'] ) ) {
+		http_response_code( isset( $decoded['documentation_url'] ) ? 403 : 400 );
+		return array(
+			'error'   => true,
+			'message' => 'GitHub API: ' . $decoded['message'],
+		);
+	}
+
+	return $decoded;
 }
 
 /**
@@ -175,6 +203,11 @@ function cl_get_file( $path ) {
 
 	// Decode base64 content.
 	$content = base64_decode( $response['content'] );
+
+	// Ensure UTF-8 encoding.
+	if ( ! mb_check_encoding( $content, 'UTF-8' ) ) {
+		$content = mb_convert_encoding( $content, 'UTF-8', 'auto' );
+	}
 
 	return array(
 		'name'    => $response['name'],
