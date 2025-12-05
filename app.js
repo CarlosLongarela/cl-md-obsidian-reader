@@ -22,6 +22,7 @@ class ObsidianViewer {
 		this.attachEventListeners();
 		this.setupMarkdownRenderer();
 		this.setupThemeToggle();
+		this.setupMobileMenu();
 		this.loadSavedTheme();
 	}
 
@@ -30,11 +31,92 @@ class ObsidianViewer {
 	 */
 	setupThemeToggle() {
 		const themeToggle = document.getElementById('themeToggle');
+		const mobileThemeToggle = document.getElementById('mobileThemeToggle');
+
 		if (themeToggle) {
 			themeToggle.addEventListener('click', () => {
 				this.toggleTheme();
 			});
 		}
+
+		if (mobileThemeToggle) {
+			mobileThemeToggle.addEventListener('click', () => {
+				this.toggleTheme();
+			});
+		}
+	}
+
+	/**
+	 * Setup mobile menu functionality
+	 */
+	setupMobileMenu() {
+		const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+		const sidebarClose = document.getElementById('sidebarClose');
+		const sidebar = document.getElementById('sidebar');
+		const overlay = document.getElementById('sidebarOverlay');
+
+		if (mobileMenuToggle) {
+			mobileMenuToggle.addEventListener('click', () => {
+				this.openSidebar();
+			});
+		}
+
+		if (sidebarClose) {
+			sidebarClose.addEventListener('click', () => {
+				this.closeSidebar();
+			});
+		}
+
+		if (overlay) {
+			overlay.addEventListener('click', () => {
+				this.closeSidebar();
+			});
+		}
+
+		// Close sidebar when clicking on a file (mobile only)
+		if (sidebar) {
+			sidebar.addEventListener('click', (e) => {
+				if (e.target.closest('.file-button') && window.innerWidth <= 768) {
+					this.closeSidebar();
+				}
+			});
+		}
+	}
+
+	/**
+	 * Open mobile sidebar
+	 */
+	openSidebar() {
+		const sidebar = document.getElementById('sidebar');
+		const overlay = document.getElementById('sidebarOverlay');
+
+		if (sidebar) {
+			sidebar.classList.add('open');
+		}
+		if (overlay) {
+			overlay.classList.add('active');
+		}
+
+		// Prevent body scroll when sidebar is open
+		document.body.style.overflow = 'hidden';
+	}
+
+	/**
+	 * Close mobile sidebar
+	 */
+	closeSidebar() {
+		const sidebar = document.getElementById('sidebar');
+		const overlay = document.getElementById('sidebarOverlay');
+
+		if (sidebar) {
+			sidebar.classList.remove('open');
+		}
+		if (overlay) {
+			overlay.classList.remove('active');
+		}
+
+		// Restore body scroll
+		document.body.style.overflow = '';
 	}
 
 	/**

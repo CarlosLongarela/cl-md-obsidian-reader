@@ -154,14 +154,20 @@ $filtered_contents = $initial_contents ? cl_filter_contents( $initial_contents )
 	</style>
 </head>
 <body>
+	<div class="sidebar-overlay" id="sidebarOverlay"></div>
 	<div class="container">
-		<aside class="sidebar">
+		<aside class="sidebar" id="sidebar">
 			<div class="sidebar-header">
 				<h1><?php echo htmlspecialchars( CL_APP_TITLE ); ?></h1>
-				<button class="theme-toggle" id="themeToggle" title="Toggle theme">
-					<span class="theme-icon-light">☀️</span>
-					<span class="theme-icon-dark">🌙</span>
-				</button>
+				<div class="header-buttons">
+					<button class="theme-toggle" id="themeToggle" title="Cambiar tema">
+						<span class="theme-icon-light">☀️</span>
+						<span class="theme-icon-dark">🌙</span>
+					</button>
+					<button class="sidebar-close" id="sidebarClose" title="Cerrar menú">
+						<span>✕</span>
+					</button>
+				</div>
 			</div>
 			<nav class="file-tree" id="fileTree">
 				<?php if ( false === $filtered_contents ) : ?>
@@ -193,7 +199,16 @@ $filtered_contents = $initial_contents ? cl_filter_contents( $initial_contents )
 
 		<main class="content">
 			<div class="content-header">
+				<button class="mobile-menu-toggle" id="mobileMenuToggle" title="Abrir menú">
+					<span></span>
+					<span></span>
+					<span></span>
+				</button>
 				<h2 id="contentTitle">Selecciona un archivo</h2>
+				<button class="theme-toggle mobile-theme-toggle" id="mobileThemeToggle" title="Cambiar tema">
+					<span class="theme-icon-light">☀️</span>
+					<span class="theme-icon-dark">🌙</span>
+				</button>
 				<?php if ( CL_ENABLE_BREADCRUMBS ) : ?>
 				<nav class="breadcrumbs" id="breadcrumbs" style="display: none;" aria-label="Breadcrumb navigation">
 					<span class="breadcrumb-item">
